@@ -28,3 +28,21 @@ for z in zips:
         continue
     r = subprocess.run([sys.executable, 'add_mod.py', z], capture_output=True, text=True, encoding='utf-8')
     print(r.stdout.strip() or r.stderr.strip())
+
+# ── сборки модов (packs/<id>.json) — в catalog.json рядом с модами (15.11.2026) ──
+cat = json.load(io.open('catalog.json', encoding='utf-8'))
+ids = {m['id'] for m in cat.get('mods', [])}
+packs = []
+for f in sorted(glob.glob('packs/*.json')):
+    try:
+        pk = json.load(io.open(f, encoding='utf-8-sig'))
+    except Exception as ex:
+        print('Сборка не разобралась:', f, ex); continue
+    mods = [m for m in pk.get('mods', []) if m in ids]
+    if not pk.get('id') or not mods:
+        continue
+    packs.append({k: pk[k] for k in ('id', 'name', 'nameEn', 'author', 'desc', 'descEn', 'version') if pk.get(k)} | {'mods': mods})
+if packs or cat.get('packs'):
+    cat['packs'] = packs
+    io.open('catalog.json', 'w', encoding='utf-8').write(json.dumps(cat, ensure_ascii=False, indent=2))
+    print('Сборок:', len(packs))

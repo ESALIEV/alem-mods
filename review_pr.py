@@ -21,6 +21,8 @@ NSFW_CLASSES = {'FEMALE_BREAST_EXPOSED', 'FEMALE_GENITALIA_EXPOSED', 'MALE_GENIT
 NSFW_SCORE = 0.45                    # ниже — не считаем (ложные срабатывания на пиксель-арте)
 MIN_IMG = 48                         # меньше 48 px — иконки и тайлы, нейросеть по ним гадает
 NAME_RE = re.compile(r'^[A-Za-z0-9_.\-]+\.zip$')
+PACK_RE = re.compile(r'^packs/([a-z0-9_\-]{2,48})\.json$')   # сборки модов (15.11.2026)
+MAX_PACK = 20 * 1024
 
 def sh(*a):
     return subprocess.run(a, capture_output=True, text=True, encoding='utf-8', errors='replace')
@@ -55,16 +57,55 @@ def review(args):
     diff = sh('git', 'diff', '--no-renames', '--name-status', 'origin/main...' + args.pr_ref).stdout.strip().splitlines()
     rejects, manual, notes, oks = [], [], [], []
     zips = []
+    packs = []
     for line in diff:
         parts = line.split('\t')
         st, path = parts[0], parts[-1]
         if path.startswith('mods/') and path.endswith('.zip') and st[0] in 'AM':
             zips.append(path)
+        elif PACK_RE.match(path) and st[0] in 'AM':
+            packs.append(path)
+        elif path.startswith('packs/') and st[0] == 'D':
+            manual.append('удаление сборки `%s` — решает автор игры / deleting a pack needs the game author' % path)
         elif path.startswith('mods/') and st[0] == 'D':
             manual.append('удаление `%s` — решает автор игры / deleting a mod needs the game author' % path)
         else:
-            rejects.append('в заявке можно менять только архивы в `mods/`, а изменён `%s` / only `mods/*.zip` may be changed' % path)
-    if not zips and not rejects and not manual:
+            rejects.append('в заявке можно менять только архивы в `mods/` и сборки `packs/<id>.json`, а изменён `%s` / only `mods/*.zip` and `packs/<id>.json` may be changed' % path)
+
+    # ── сборки: только JSON-список модов, без картинок и кода ──
+    for pp in packs:
+        pid = PACK_RE.match(pp).group(1)
+        raw = subprocess.run(['git', 'show', '%s:%s' % (args.pr_ref, pp)], capture_output=True).stdout
+        if len(raw) > MAX_PACK:
+            rejects.append('`%s`: больше 20 КБ / larger than 20 KB' % pp); continue
+        try:
+            pk = json.loads(raw.decode('utf-8-sig'))
+        except Exception as ex:
+            rejects.append('`%s`: не разбирается как JSON (%s) / invalid JSON' % (pp, ex)); continue
+        if not isinstance(pk, dict) or pk.get('id') != pid:
+            rejects.append('`%s`: поле `id` должно совпадать с именем файла (`%s`) / `id` must match the file name' % (pp, pid)); continue
+        if not pk.get('name'):
+            rejects.append('`%s`: нет `name` / no name' % pp); continue
+        mods = pk.get('mods')
+        if not isinstance(mods, list) or not mods or not all(isinstance(m, str) for m in mods):
+            rejects.append('`%s`: `mods` — список id модов из Мастерской / `mods` must be a list of mod ids' % pp); continue
+        unknown = [m for m in mods if m not in by_id]
+        if unknown:
+            rejects.append('`%s`: этих модов нет в Мастерской: %s — сначала их нужно выложить / not in the Workshop yet: %s'
+                           % (pp, ', '.join('`%s`' % m for m in unknown), ', '.join(unknown))); continue
+        extra = set(pk) - {'id', 'name', 'nameEn', 'author', 'desc', 'descEn', 'mods', 'version'}
+        if extra:
+            notes.append('`%s`: лишние поля не читаются: %s / unknown fields are ignored' % (pp, ', '.join(sorted(extra))))
+        owner = owners.get('pack:' + pid)
+        old = os.path.exists(pp)
+        if not old:
+            manual.append('`%s` — **новая сборка** «%s» (%d модов): первый раз её проверяет автор игры / new pack, the game author reviews it first' % (pp, pk['name'], len(mods)))
+        elif not owner or owner.lower() != args.author.lower():
+            manual.append('`%s`: сборка записана за другим автором (%s) — решает автор игры / the pack belongs to another author' % (pp, owner or '—'))
+        else:
+            oks.append('`%s`: обновление сборки «%s» (%d модов)' % (pp, pk['name'], len(mods)))
+
+    if not zips and not packs and not rejects and not manual:
         rejects.append('в заявке нет архива мода / no mod archive in this pull request')
 
     work = 'pr_unpack'
@@ -195,6 +236,10 @@ def register(args):
             mid = json.loads(z.read(mj[0]).decode('utf-8-sig')).get('id')
         if mid and mid not in owners:
             owners[mid] = args.author; changed = True; print('владелец', mid, '=', args.author)
+    for pp in args.files:
+        m = PACK_RE.match(pp)
+        if m and os.path.exists(pp) and ('pack:' + m.group(1)) not in owners:
+            owners['pack:' + m.group(1)] = args.author; changed = True; print('владелец сборки', m.group(1), '=', args.author)
     if changed:
         io.open('owners.json', 'w', encoding='utf-8').write(json.dumps(owners, ensure_ascii=False, indent=2, sort_keys=True))
 
