@@ -3,9 +3,10 @@
 Игра читает отсюда список модов: https://raw.githubusercontent.com/ESALIEV/alem-mods/main/catalog.json
 
 ## Как моддеры выкладывают моды
-Заявкой (Pull Request): **mods → Add file → Upload files → Propose changes → Create pull request**.
+Заявкой (Pull Request): **Fork → в своей копии mods → Add file → Upload files → Commit → Contribute → Open pull request**.
 Бот (`review_pr.py`, `.github/workflows/review.yml`) проверяет заявку: только файлы мода, подделки,
 антивирус, нейросеть по картинкам, mod.json, версия, автор.
+Разрешены: .json .lua .png .jpg .wav .ogg .mp3 и текстовые .txt .md .csv .tsv .xml .yml .yaml .ini .cfg.
 - обновление своего мода и всё чисто — **принимается само**;
 - новый мод, чужой мод или подозрительная картинка — метка **needs-review**, решает автор игры (Merge / Close);
 - ошибки — метка **rejected**, моддер исправляет.

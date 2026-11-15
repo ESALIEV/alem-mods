@@ -14,7 +14,8 @@ import argparse, io, json, os, re, subprocess, sys, zipfile, shutil
 
 MAX_ZIP = 60 * 1024 * 1024          # архив
 MAX_UNPACKED = 250 * 1024 * 1024     # распакованный (защита от «zip-бомбы»)
-ALLOWED = {'.json', '.lua', '.png', '.jpg', '.jpeg', '.wav', '.ogg', '.mp3', '.txt', '.md'}
+ALLOWED = {'.json', '.lua', '.png', '.jpg', '.jpeg', '.wav', '.ogg', '.mp3',
+           '.txt', '.md', '.csv', '.tsv', '.xml', '.yml', '.yaml', '.ini', '.cfg'}   # текстовые — заметки и таблицы моддеров
 NSFW_CLASSES = {'FEMALE_BREAST_EXPOSED', 'FEMALE_GENITALIA_EXPOSED', 'MALE_GENITALIA_EXPOSED',
                 'BUTTOCKS_EXPOSED', 'ANUS_EXPOSED'}
 NSFW_SCORE = 0.45                    # ниже — не считаем (ложные срабатывания на пиксель-арте)
@@ -41,10 +42,9 @@ def magic_ok(name, data):
     if ext == '.wav':  return data[:4] == b'RIFF' and data[8:12] == b'WAVE'
     if ext == '.ogg':  return data[:4] == b'OggS'
     if ext == '.mp3':  return data[:3] == b'ID3' or (len(data) > 1 and data[0] == 0xFF and (data[1] & 0xE0) == 0xE0)
-    # текстовые: должны читаться как UTF-8 и не содержать нулевых байтов (не переименованная программа)
-    if b'\x00' in data[:4096]: return False
-    try: data[:65536].decode('utf-8-sig'); return True
-    except UnicodeDecodeError: return False
+    # текстовые: без нулевых байтов (программа внутри «текста» почти всегда их содержит).
+    # Кодировку не требуем: «Блокнот» на русской Windows сохраняет в cp1251, это не подделка.
+    return b'\x00' not in data[:4096]
 
 def review(args):
     catalog = load('catalog.json', {'mods': []})
@@ -82,7 +82,7 @@ def review(args):
         try: z = zipfile.ZipFile(local)
         except zipfile.BadZipFile:
             rejects.append('`%s`: это не zip-архив / not a zip archive' % name); continue
-        bad = False; total = 0; mj = None
+        bad = False; total = 0; mj = None; forbidden = []
         for info in z.infolist():
             n = info.filename
             if n.endswith('/'): continue
@@ -91,11 +91,15 @@ def review(args):
             total += info.file_size
             ext = os.path.splitext(n)[1].lower()
             if ext not in ALLOWED:
-                rejects.append('`%s`: запрещённый файл `%s` (можно: %s) / file type not allowed' % (name, n, ' '.join(sorted(ALLOWED)))); bad = True; continue
+                forbidden.append(n); bad = True; continue
             head = z.open(info).read(65536)
             if not magic_ok(n, head):
                 rejects.append('`%s`: файл `%s` не тот, за кого себя выдаёт / file content does not match its extension' % (name, n)); bad = True
             if n.replace(chr(92), '/').split('/')[-1].lower() == 'mod.json' and (mj is None or len(n) < len(mj)): mj = n
+        if forbidden:   # одной строкой, а не по строке на файл
+            more = ' …+%d' % (len(forbidden) - 5) if len(forbidden) > 5 else ''
+            rejects.append('`%s`: запрещённые файлы: %s%s (можно: %s) / file types not allowed'
+                           % (name, ', '.join('`%s`' % f for f in forbidden[:5]), more, ' '.join(sorted(ALLOWED))))
         if total > MAX_UNPACKED:
             rejects.append('`%s`: распакованный больше 250 МБ / unpacked size over 250 MB' % name); continue
         if bad: continue
