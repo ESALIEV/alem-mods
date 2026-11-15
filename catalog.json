@@ -11,7 +11,124 @@
       "sha256": "967f08f7194d59ab16c86d5daf77ee7cb12a83772ad950782ecb8d4a47056353",
       "nameEn": "",
       "descEn": "",
-      "minGame": ""
+      "minGame": "",
+      "images": [
+        "previews/ak_pack/preview.png"
+      ],
+      "icon": "previews/ak_pack/preview.png",
+      "tags": [
+        "weapons",
+        "apparel",
+        "buildings",
+        "items",
+        "world",
+        "tech",
+        "scripts"
+      ],
+      "requires": [],
+      "category": "weapons",
+      "rating": 0,
+      "featured": false,
+      "changelog": "",
+      "changelogEn": "",
+      "added": "2026-11-15"
+    },
+    {
+      "id": "tf2_mod",
+      "name": "Мод по тф2",
+      "author": "artem27789",
+      "version": "4.1",
+      "desc": "Добовляет оружие и одежду из игры ТФ2",
+      "zip": "mods/AlemTF2.zip",
+      "size": 13544618,
+      "sha256": "a647c7f0456e8af2d1dc8bb6c953fc7c1268542123ff30ca6cf4d16b1d6672af",
+      "images": [],
+      "icon": "",
+      "tags": [
+        "weapons",
+        "apparel",
+        "buildings",
+        "enemies",
+        "events",
+        "items",
+        "world",
+        "tech",
+        "people",
+        "magic",
+        "scripts"
+      ],
+      "requires": [],
+      "updated": "2026-11-15",
+      "nameEn": "",
+      "descEn": "",
+      "minGame": "",
+      "category": "weapons",
+      "rating": 0,
+      "featured": false,
+      "changelog": "",
+      "changelogEn": "",
+      "added": "2026-11-15"
+    },
+    {
+      "id": "OnlineMarket",
+      "name": "Online Market",
+      "author": "Tiho",
+      "version": "7.1-0251",
+      "desc": "Онлайн-маркет 7.1: категории, только товары с ценой, ✕ Закрыть всегда выходит. Alem 0.25.01.",
+      "zip": "mods/OnlineMarket.zip",
+      "size": 2012476,
+      "sha256": "a5e264f659c0b6544dc92d8a8a8be56b9ab41ced94166d1fe6bae01205c038b3",
+      "images": [
+        "previews/OnlineMarket/preview.png"
+      ],
+      "icon": "previews/OnlineMarket/preview.png",
+      "tags": [
+        "scripts"
+      ],
+      "requires": [],
+      "updated": "2026-11-15",
+      "nameEn": "",
+      "descEn": "",
+      "minGame": "",
+      "category": "scripts",
+      "rating": 0,
+      "featured": false,
+      "changelog": "",
+      "changelogEn": "",
+      "added": "2026-11-15"
+    },
+    {
+      "id": "statecraft_reborn_v10",
+      "name": "Statecraft Reborn 16.16 — Рынок и доставка в центр",
+      "author": "ChatGPT",
+      "version": "16.16",
+      "desc": "Новые базовые цены и ежедневные колебания; известняковые кирпичи вместо мраморных. Блюда, травы, селитра, порох и свинец. Покупки сразу появляются на земле в центре колонии. Сохранены государство, орки и технологии.",
+      "zip": "mods/Statecraft_Reborn.zip",
+      "size": 1391895,
+      "sha256": "14c9c779e56fdb191f12d0cf64bc25303e2b81aac717cdb9e0c22405bb36f2db",
+      "images": [
+        "previews/statecraft_reborn_v10/preview.png"
+      ],
+      "icon": "previews/statecraft_reborn_v10/preview.png",
+      "tags": [
+        "buildings",
+        "enemies",
+        "world",
+        "tech",
+        "people",
+        "scripts"
+      ],
+      "requires": [],
+      "updated": "2026-11-15",
+      "nameEn": "",
+      "descEn": "",
+      "minGame": "",
+      "category": "buildings",
+      "rating": 0,
+      "featured": false,
+      "changelog": "",
+      "changelogEn": "",
+      "added": "2026-11-15"
     }
   ]
 }
