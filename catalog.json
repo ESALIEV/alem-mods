@@ -134,6 +134,35 @@
       "changelog": "",
       "changelogEn": "",
       "added": "2026-11-15"
+    },
+    {
+      "id": "workshop_test",
+      "name": "Тест Мастерской",
+      "author": "Alem Forge",
+      "version": "1.0",
+      "desc": "Проверочный мод Мастерской: нож чуть острее (урон 12 вместо обычного). Можно удалить.",
+      "zip": "mods/workshop_test.zip",
+      "size": 27957,
+      "sha256": "e276157a12daef04c38d96a94eff71201758143f5b2d8228edfdf43500ac269e",
+      "images": [
+        "previews/workshop_test/preview.png",
+        "previews/workshop_test/preview1.png"
+      ],
+      "icon": "previews/workshop_test/preview.png",
+      "tags": [
+        "weapons"
+      ],
+      "requires": [],
+      "nameEn": "Workshop test",
+      "descEn": "Workshop check mod: the knife is a bit sharper. Safe to delete.",
+      "minGame": "0.25.04",
+      "changelog": "Первая версия.",
+      "changelogEn": "First release.",
+      "category": "weapons",
+      "updated": "2026-11-15",
+      "rating": 0,
+      "featured": false,
+      "added": "2026-11-15"
     }
   ]
 }
