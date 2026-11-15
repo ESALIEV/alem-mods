@@ -98,39 +98,6 @@
       "added": "2026-11-15"
     },
     {
-      "id": "statecraft_reborn_v10",
-      "name": "Statecraft Reborn 16.16 — Рынок и доставка в центр",
-      "author": "ChatGPT",
-      "version": "16.16",
-      "desc": "Новые базовые цены и ежедневные колебания; известняковые кирпичи вместо мраморных. Блюда, травы, селитра, порох и свинец. Покупки сразу появляются на земле в центре колонии. Сохранены государство, орки и технологии.",
-      "zip": "mods/Statecraft_Reborn.zip",
-      "size": 1391895,
-      "sha256": "14c9c779e56fdb191f12d0cf64bc25303e2b81aac717cdb9e0c22405bb36f2db",
-      "images": [
-        "previews/statecraft_reborn_v10/preview.png"
-      ],
-      "icon": "previews/statecraft_reborn_v10/preview.png",
-      "tags": [
-        "buildings",
-        "enemies",
-        "world",
-        "tech",
-        "people",
-        "scripts"
-      ],
-      "requires": [],
-      "updated": "2026-11-15",
-      "nameEn": "",
-      "descEn": "",
-      "minGame": "",
-      "category": "buildings",
-      "rating": 0,
-      "featured": false,
-      "changelog": "",
-      "changelogEn": "",
-      "added": "2026-11-15"
-    },
-    {
       "id": "my_arcane_mod",
       "name": "Тайные Искусства",
       "author": "Seiji31",
