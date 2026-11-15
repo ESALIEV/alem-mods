@@ -13,7 +13,7 @@ if e is None:
     e = {'id': info['id']}; cat['mods'].append(e)
 e.update({'name': info.get('name', info['id']), 'author': info.get('author', ''),
           'version': info.get('version', '1.0'), 'desc': info.get('desc', ''),
-          'zip': zp.replace('\', '/'), 'size': os.path.getsize(zp), 'sha256': sha})
+          'zip': zp.replace(chr(92), '/'), 'size': os.path.getsize(zp), 'sha256': sha})
 e.setdefault('nameEn', ''); e.setdefault('descEn', ''); e.setdefault('minGame', '')
 io.open('catalog.json', 'w', encoding='utf-8').write(json.dumps(cat, ensure_ascii=False, indent=2))
 print('Готово:', info['id'], info.get('version'))

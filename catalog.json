@@ -1,4 +1,17 @@
 {
   "mods": [
+    {
+      "id": "ak_pack",
+      "name": "TACZ Arms",
+      "author": "Beluga",
+      "version": "3.20",
+      "desc": "TACZ 3.20: ребаланс ролей (ПМ→ПП→АК→DMR), стрельбище, база. 0.23.09+",
+      "zip": "mods/TACZ weapon pack.zip",
+      "size": 3806720,
+      "sha256": "967f08f7194d59ab16c86d5daf77ee7cb12a83772ad950782ecb8d4a47056353",
+      "nameEn": "",
+      "descEn": "",
+      "minGame": ""
+    }
   ]
 }
