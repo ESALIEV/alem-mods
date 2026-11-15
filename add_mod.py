@@ -64,6 +64,11 @@ e.update({'name': info.get('name', mid), 'author': info.get('author', ''),
           'zip': zp, 'size': os.path.getsize(zp), 'sha256': sha,
           'images': images, 'icon': icon, 'tags': tags,
           'requires': info.get('requires') or []})
+# необязательные поля, которые моддер пишет в mod.json сам — они главнее автоопределения
+for k in ['nameEn', 'descEn', 'minGame', 'changelog', 'changelogEn']:
+    if info.get(k): e[k] = info[k]
+if info.get('category'): e['category'] = info['category']
+elif fresh or e.get('category') in (None, '', 'other'): e['category'] = tags[0]
 if old_ver != e['version'] or fresh:
     e['updated'] = datetime.date.today().isoformat()
 for k, v in [('nameEn', ''), ('descEn', ''), ('minGame', ''), ('category', tags[0]), ('rating', 0),
