@@ -23,7 +23,7 @@ CATS = [  # (файл в моде, категория) — первая найд
 zp = sys.argv[1].replace(chr(92), '/')
 with zipfile.ZipFile(zp) as z:
     names = z.namelist()
-    mj = sorted([n for n in names if n.endswith('mod.json')], key=len)
+    mj = sorted([n for n in names if n.replace(chr(92), '/').split('/')[-1].lower() == 'mod.json'], key=len)
     if not mj: sys.exit('В архиве нет mod.json')
     root = mj[0][:-len('mod.json')]          # мод может лежать в папке внутри архива
     info = json.loads(z.read(mj[0]).decode('utf-8-sig'))
