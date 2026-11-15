@@ -3,7 +3,7 @@
 name: catalog
 on:
   push:
-    paths: ['mods/**', 'add_mod.py', 'build_catalog.py']
+    paths: ['mods/**', 'packs/**', 'add_mod.py', 'build_catalog.py']
   workflow_dispatch:
 permissions:
   contents: write
